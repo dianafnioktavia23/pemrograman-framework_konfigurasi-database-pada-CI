@@ -95,9 +95,170 @@ Kemdian masuk ke folder public -> buat folder assets -> buat folder lagi dengan 
   
 Kemudian buat lagi file dengan nama semuafilm.php pada folder film yang ada pada view  dan konfigurasikan untuk tampilan pada browser.
 
-![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/296a9545-8418-41b7-814c-4809b8c1f8d0)
+```bash
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>data film</title>
+</head>
+<body>
+    <h1>Data Film</h1>
+    <table border ="1" cellspacing="5" cellpadding="5">
+        <tr>
+            <th>No</th>
+            <th>cover</th>
+            <th>Nama Film</th>
+            <th>id_Genre</th>
+            <th>Durasi</th>
+        </tr>
+        <?php $i = 1 ;?>
+        <?php foreach($semuafilm as $film): ?>
+            <tr>
+                <td><?= $i++;?></td>
+                <td>
+                    <img style="width:50px;"src="/assets/cover/<?=$film['cover']?>" alt="">
+                </td>
+                <td><?php echo $film['nama_film']?></td>
+                <td><?= $film['id_genre']?></td>
+                <td><?= $film['duration']?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
+</body>
+</html>
+```
 
-7.	Kemudian masuk ke terminal lagi   lalu ketikkan perintah php spark serve 
+7.	Kemudian masuk ke terminal lagi -> lalu ketikkan perintah php spark serve 
+
+![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/768ff4ad-da3f-4a7e-9182-5fd19ec846a5)
+
+8.Kemudian masuk kedalam browser dan ketikkan perintah localhost:8080/film/all maka akan tampil ,tampilan sebagi berikut :
+
+![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/c2790b6e-d710-40c2-8ade-f08748e6ce92)
+
+# Tugas 
+
+Tugas yang diberikan pada praktikum ini akan berhubungan dengan praktikum diminggu depan yakni:
+1. Tambahkan pada database db_film table genre , dengan isi:
+    Id Int Primary Key
+    Nama_genre varchar(100)
+    Created_at current_timestamp()
+    Updated_at current_timestamp()
+    
+    ![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/807f3fb9-da00-4c88-9f23-88d32c0e6cee)
+    
+ 2.Tampilkan Data Genre di halaman Html ,jika untuk menampilkan data film kita akses nya /film/all untuk menampilkan data genre akses nya adalah /genre/all
+ 
+a. Batlah file Genre.php pada folder controller
+```bush
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+
+use App\Models\GenreModel;
+
+class Genre extends BaseController
+{
+    protected $Genre;
+    //step 3 membuat fungsi construct untuk inisiasi class model
+    public function __construct()
+    {
+        //step 4 memanggil 
+        $this->Genre = new GenreModel();
+    }
+
+    //all
+    public function all()
+    {
+       // dd($this->Film->getAllData());
+        $data['genre'] = $this->Genre->getAllData();
+       return view("film/genre",$data);
+    }
+}
+```
+
+b. buatlah file GenreModel pada folder Model
+```bush
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class GenreModel extends Model
+{
+    protected $table = 'genre';
+    protected $primarykey ='id';
+    protected $useAutoIncrement = true;
+    protected $allowFields =[];
+
+
+    //menampilkan seluruh data
+    public function getAllData()
+    {
+        return $this -> findAll();
+    }
+}
+```
+
+c. buatlah file genre.php pada folder View
+```bush
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Genre</title>
+</head>
+<body>
+<h1>Data Genre</h1>
+    <table border ="1" cellspacing="5" cellpadding="5">
+        <tr>
+            <th>No</th>
+            <th>Nama genre </th>
+            <th>Created_at</th>
+            <th>updated_at</th>
+        </tr>
+        <?php $i = 1 ;?>
+        <?php foreach($genre as $row): ?>
+            <tr>
+                <td><?= $i++;?></td>
+                <td><?php echo $row['nama_genre']?></td>
+                <td><?= $row['created_at']?></td>
+                <td><?= $row['updated_at']?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
+</body>
+</html>
+```
+Output yang dihasilkan yaitu :
+
+![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/8660b89c-2cc3-431c-88d2-ee48c7de98f8)
+
+3. Ubah table film pada kolom genre menjadi id_genre,isi nilainya sesuaikan dengan data pada table genre.
+
+  -> Ubah pada bagian database di table film dan ubah genre menjadi id_genre dan jadikan sebagai foreign key
+  
+  ![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/1fa462da-c75a-4912-9c22-b05e16921567)
+
+4.Saat menjalankan /film/all pastikan tidak ada error ,artinya codingan nya harus disesuaikan karna kita mengganti genre mnjadi id_genre
+
+![image](https://github.com/dianafnioktavia23/pemrograman-framework_konfigurasi-database-pada-CI/assets/113124849/f447bcbe-5989-4ffb-b598-823f331861d5)
+
+    
+    
+
+
+
+
+
 
 
       
